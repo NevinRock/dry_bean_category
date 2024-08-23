@@ -18,7 +18,7 @@ def predict_scoreing(y_true: pd.Series, y_pred: pd.Series) -> None:
     f1 = f1_score(y_true, y_pred, average='macro')
 
     # Generate a classification report for detailed metrics
-    class_report = classification_report(y_true, y_pred, zero_division=0, output_dict=False)
+    class_report = classification_report(y_true, y_pred, zero_division=0, output_dict= True)
 
     # Print detailed metrics
     pprint.pprint({"Accuracy": accuracy, "F1-Score": f1, "Classification Report": class_report})
@@ -70,7 +70,6 @@ def decoder(s: pd.Series) -> pd.Series:
     return s.map(reverse_category)
 
 
-
 # fetch dataset
 dry_bean = fetch_ucirepo(id=602)
 
@@ -82,10 +81,6 @@ y_encodered= encoder(y["Class"])
 
 df = pd.concat([X, y_encodered], axis=1)
 df_output = pd.concat([X, y], axis=1)
-
-# df.to_csv('dry_bean.csv', index=False)
-
-
 
 X_train, X_test, y_train, y_test = train_test_split(df.iloc[:, :-1], df.iloc[:, -1], test_size=0.2, random_state=42)
 
@@ -117,9 +112,6 @@ df_output["quality_prediction"] = df_output["quality_prediction"].where(pd.notna
 
 
 
-df_output.to_csv(("output/output_"+datetime.datetime.now().strftime('%Y%m%d_%H%M%S') + ".csv"), index=False)
-
-
-# predict_scoreing(y_encodered, pd.Series(prediction))
+df_output.to_csv(("output/output_"+datetime.datetime.now().strftime('%Y%m%d_%H%M%S') + ".csv"), index= False)
 
 predict_scoreing(df_output["Class"], df_output["quality_prediction"])
